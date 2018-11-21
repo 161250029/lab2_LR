@@ -42,25 +42,4 @@ public class Matrix {
     public void setMatrix(Production[][] matrix) {
         this.matrix = matrix;
     }
-    public Production[] getAllrow(int i) {
-        Production[] result = new Production[column];
-        for(int j = 0 ; j < column ; j++) {
-            result[j] = matrix [i][j];
-        }
-        return result;
-    }
-
-    public int getSentenceRow(String X) {
-        int result = -1;
-       for(int i = 0 ; i < row ; i ++) {
-           Production[] temp = getAllrow(i);
-           for(int j = 0 ; j <column ; j ++) {
-               if(temp[j]!=null&&temp[j].getLeft().equals(X)) {
-                    result = i;
-                    break;
-               }
-           }
-       }
-       return result;
-    }
 }

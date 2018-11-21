@@ -30,16 +30,8 @@ public class Production {
     public void setRight(ArrayList<String> right) {
         this.right = right;
     }
-    public boolean containKey(String key) {
-        for(String str : right) {
-            if(right.equals(key)) {
-                return true;
-            }
-        }
-        return false;
-    }
     public String toString() {
-        return left + "->" + right;
+        return left + "->" + toRight();
     }
 
     public String toRight() {

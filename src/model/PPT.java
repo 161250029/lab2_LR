@@ -6,49 +6,13 @@ import java.util.ArrayList;
 
 public class PPT {
     private Matrix matrix;       //PPT预测分析表
-
-    public PPT() {
-        ArrayList<String> list1 = new ArrayList<String>();
-        list1.add("T"); list1.add("E'");
-       Production production1 = new Production("E" , list1);
-        ArrayList<String> list2 = new ArrayList<String>();
-        list2.add("+"); list2.add("T"); list2.add("E'");
-       Production production2 = new Production("E'" , list2);
-        ArrayList<String> list3 = new ArrayList<String>();
-        list3.add("ε");
-       Production production3 = new Production("E'" , list3);
-        ArrayList<String> list4 = new ArrayList<String>();
-        list4.add("F"); list4.add("T'");
-       Production production4 = new Production("T" , list4);
-        ArrayList<String> list5 = new ArrayList<String>();
-        list5.add("*"); list5.add("F"); list5.add("T'");
-       Production production5 = new Production("T'" , list5);
-        Production production6 = new Production("T'" , list3);
-        ArrayList<String> list6 = new ArrayList<String>();
-        list6.add("("); list6.add("E"); list6.add(")");
-        Production production7 = new Production("F" , list6);
-        ArrayList<String> list7 = new ArrayList<String>();
-        list7.add("id");
-        Production production8 = new Production("F" , list7);
-
-        matrix = new Matrix(5 , 6);
-        matrix.add(0,0 , production1);
-        matrix.add(0,3 , production1);
-        matrix.add(1 , 1, production2);
-        matrix.add(1, 4, production3);
-        matrix.add(1 , 5 , production3);
-        matrix.add(2, 0 , production4);
-        matrix.add(2, 3 , production4);
-        matrix.add(3, 1 , production6);
-        matrix.add(3, 4 , production6);
-        matrix.add(3, 5 , production6);
-        matrix.add(3, 2 , production5);
-        matrix.add(4 , 0 , production8);
-        matrix.add(4 , 3 , production7);
-        }
+    private ArrayList<String> nonterminalList;
+    private ArrayList<String> terminalList;
 
     public PPT(int row , int column) {
         this.matrix = new Matrix(row , column);
+        this.nonterminalList = new ArrayList<String>();
+        this.terminalList = new ArrayList<String>();
     }
 
     public void addProduction(int i , int j , Production pro) {
@@ -57,15 +21,59 @@ public class PPT {
         public Production getSentence(int i , int j) {
               return this.matrix.get(i , j);
         }
-        public int getSentenceRow(String X) {
-        return this.matrix.getSentenceRow(X);
-    }
         public Matrix getMatrix() {
         return this.matrix;
     }
 
         public void setMatrix(Matrix matrix) {
         this.matrix = matrix;
+    }
+
+    public ArrayList<String> getNonterminalList() {
+        return nonterminalList;
+    }
+
+    public void setNonterminalList(ArrayList<String> nonterminalList) {
+        this.nonterminalList = nonterminalList;
+    }
+
+    public ArrayList<String> getTerminalList() {
+        return terminalList;
+    }
+
+    public void setTerminalList(ArrayList<String> terminalList) {
+        this.terminalList = terminalList;
+    }
+    public int getRow(String X) {
+        int index = -1;
+        for(int i = 0 ; i < nonterminalList.size() ; i ++) {
+            if(X.equals(nonterminalList.get(i))) {
+                index = i;
+                break;
+            }
+        }
+        return index;
+    }
+
+    public int getColumn(String X) {
+        int index = -1;
+        for(int i = 0 ; i < terminalList.size() ; i ++) {
+            if(X.equals(terminalList.get(i))) {
+                index = i;
+                break;
+            }
+        }
+        return index;
+    }
+
+    public boolean isNonterminal(String X) {
+        boolean flag= false;
+        for(String str : nonterminalList) {
+            if(X.equals(str)) {
+                flag = true;
+            }
+        }
+        return flag;
     }
     public void print() {
         for(int i = 0 ; i < matrix.getRow() ; i++) {

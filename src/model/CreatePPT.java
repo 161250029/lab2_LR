@@ -23,8 +23,7 @@ public class CreatePPT {
     }
 
     public PPT create() {
-        //测试
-        input.add("E->TE'"); input.add("E'->+TE'"); input.add("E'->ε"); input.add("T->FT'"); input.add("T'->*FT'"); input.add("T'->ε"); input.add("F->(E)"); input.add("F->id");
+        eliminate();
         for(String str: input) {
             String[] split = str.split("->");
             String left = split[0];
@@ -49,8 +48,6 @@ public class CreatePPT {
         }
                 terminalList.remove("ε");
                 terminalList.add("$");
-//                System.out.println(nonterminalList.size());
-//                System.out.println(terminalList.size());
         PPT ppt = new PPT(nonterminalList.size() , terminalList.size());
         for(int i = 0 ; i < input.size(); i++) {
             Production temp = InputToProduction(input.get(i));
@@ -65,22 +62,35 @@ public class CreatePPT {
                 ppt.addProduction(getRow(temp.getLeft()) , getColumn(s) , temp);
             }
         }
-        ppt.print();
-        System.out.println(ppt.getMatrix().get(2 , 5));
-        System.out.println(nonterminalList);
-        System.out.println(terminalList);
-//        System.out.println(first("E",new ArrayList<String>()));
-//        System.out.println(first("E'",new ArrayList<String>()));
-//        System.out.println(first("T",new ArrayList<String>()));
-//        System.out.println(first("T'",new ArrayList<String>()));
-//        System.out.println(first("F",new ArrayList<String>()));
-//
-//        System.out.println(follow("E" , new ArrayList<String>()));
-//        System.out.println(follow("E'" , new ArrayList<String>()));
-//        System.out.println(follow("T" , new ArrayList<String>()));
-//        System.out.println(follow("T'" , new ArrayList<String>()));
-//       System.out.println(follow("F" , new ArrayList<String>()));
+        ppt.setNonterminalList(nonterminalList);
+        ppt.setTerminalList(terminalList);
+
+//        System.out.println(nonterminalList);
+//        System.out.println(terminalList);
+//        ppt.print();
         return ppt;
+    }
+
+    public void eliminate() {
+        for(String str : input) {
+            String[] split = str.split("->");
+            String left = split[0];
+            String right = split[1];
+            if(left.equals(right.substring(0,1))) {
+                ArrayList<String> sameLeft = new ArrayList<String>();
+                for(String s : input) {
+                    String[] spl = s.split("->");
+                    String l = spl[0];
+                    if(l.equals(left)) {
+                        sameLeft.add(s);
+                    }
+                }
+                input.remove(str);
+                input.add(left + "->" +sameLeft.get(1).split("->")[1] + left + "'");
+                input.add(left + "'" + "->" + sameLeft.get(0).split("->")[1].substring(1));
+                input.add(left + "'" + "->" + "ε");
+            }
+        }
     }
 
     public ArrayList<String> first(String X ,ArrayList<String> line){
@@ -132,7 +142,7 @@ public class CreatePPT {
                         line.add(s);
                     }
                     if(hasNull(p.getRight().get(index))) {
-                        follow(p.getRight().get(index) , line);
+                        follow(p.getLeft() , line);
                     }
                  }
                 }
@@ -153,7 +163,7 @@ public class CreatePPT {
                         line.add(s);
                     }
                     if(hasNull(p.getRight().get(index))) {
-                        follow(p.getRight().get(index) , line);
+                        follow(p.getLeft() , line);
                     }
                 }
             }
@@ -302,14 +312,5 @@ public class CreatePPT {
             }
         }
         return index;
-    }
-    public PPT start(String path) throws IOException {
-        CreatePPT constuct = new CreatePPT(path);
-        constuct.create();
-        return constuct.create();
-    }
-    public static void main(String args[]) throws IOException {
-        CreatePPT p = new CreatePPT("1");
-        p.create();
     }
 }
