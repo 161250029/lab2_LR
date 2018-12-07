@@ -1,0 +1,11 @@
+E->TE'
+T->FT'
+F->id
+T'->ε
+E'->+TE'
+T->FT'
+F->id
+T'->*FT'
+F->id
+T'->ε
+E'->ε
